@@ -67,3 +67,11 @@ func TestRollbackReportsStopFailure(t *testing.T) {
 		t.Fatal(e, f)
 	}
 }
+func TestInstallDescriptorAllowsOnlyReadForUsers(t *testing.T) {
+	for _, dir := range []bool{false, true} {
+		s := installDescriptor(dir)
+		if !strings.HasPrefix(s, "O:BAG:BA") || !strings.Contains(s, ";GRGX;;;BU)") || strings.Contains(s, ";FA;;;BU)") {
+			t.Fatal(s)
+		}
+	}
+}

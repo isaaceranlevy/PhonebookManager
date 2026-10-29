@@ -21,7 +21,19 @@ GOOS=windows GOARCH=amd64 go build -trimpath -o bin/phonebook.exe ./cmd/phoneboo
 
 PowerShell: `$env:GOOS='windows'; $env:GOARCH='amd64'; go build -trimpath -o bin/phonebook.exe ./cmd/phonebook`.
 
-A signed installer and signing certificate are outside v1. The executable is unsigned; do not deploy without your organization's normal review. Optional Inno Setup packaging is intentionally deferred.
+## Simple installer (1.1)
+
+Support distributes **NimbusPhonebook-Setup-1.1.0.exe**, an offline Hebrew Windows installer; customers need no Go, Git or commands. It installs in 64-bit Program Files, requests UAC, starts the automatic service, creates browser/guide shortcuts and retains ProgramData on upgrade/uninstall. The one network page proposes detected subnets and requires an explicit approved selection; it never silently approves all connected networks. Support configures the phones once.
+
+- [Initial installation for support (Hebrew)](packaging/INSTALL_SUPPORT_HE.md) · [printable PDF](packaging/INSTALL_SUPPORT_HE.pdf)
+- [Everyday customer guide (Hebrew)](packaging/USER_GUIDE_HE.md) · [printable PDF](packaging/USER_GUIDE_HE.pdf)
+- [Installer validation and native acceptance status](docs/INSTALLER_VERIFICATION.md)
+
+The compiled installer and SHA-256 are distributed under `releases/` so authenticated users can download from GitHub without cloud-workspace links. It is **unsigned**; an organization that requires signed software must provide a code-signing process before customer rollout.
+
+Developer build (Go + NSIS 3 Unicode; no new application dependencies): `scripts/build-installer.sh` on Linux, or `powershell -File scripts/build-installer.ps1` on Windows. `MAKENSIS`/`-Makensis` select the compiler. To regenerate local HTML guides run `python3 scripts/render-guides.py` (standard library only).
+
+Native acceptance on a **disposable elevated Windows VM**, never an existing customer installation: `powershell -File tests/windows-installer-smoke.ps1`. It refuses existing program/data/service paths, then exercises install, service/HTTP/XML, persistence, restart, upgrade and uninstall retaining data. A real reboot remains a separate manual gate.
 
 ## Windows usage
 

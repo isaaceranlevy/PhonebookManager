@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nimbus — התקנה ראשונית לתמיכה</title><style>*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#213049;font:16px/1.8 Arial,"Segoe UI",sans-serif}main{max-width:870px;margin:36px auto;background:white;padding:42px 54px;border-top:6px solid #4666e9;border-radius:8px;box-shadow:0 7px 30px #1724380a}header{font:bold 20px Arial;color:#4666e9;direction:ltr;text-align:right;letter-spacing:1px}h1{font-size:28px;margin:18px 0 12px}h2{font-size:20px;margin:30px 0 10px;color:#31498e;break-after:avoid}p,li{font-size:15px}li{margin:7px 0}code{direction:ltr;unicode-bidi:embed;display:inline-block;font:13px/1.7 Consolas,monospace;background:#eef2fa;border-radius:4px;padding:1px 5px;overflow-wrap:anywhere}footer{border-top:1px solid #dfe5ee;padding-top:18px;margin-top:35px;color:#7d899c;font-size:12px}a{color:#4666e9}@media(max-width:650px){main{margin:0;padding:25px 20px;border-radius:0}h1{font-size:24px}}@media print{body{background:#fff}main{margin:0;max-width:none;padding:0;border:0;box-shadow:none}h2{margin-top:22px}p,li{font-size:11pt}footer{font-size:9pt}a{color:inherit}li{break-inside:avoid}@page{size:A4;margin:18mm}}</style></head><body><main><header>Nimbus Phonebook</header><h1>Nimbus — התקנה ראשונית לתמיכה</h1>
+<p>המטרה: הלקוח מקבל קובץ התקנה אחד, מתקין ופותח קיצור דרך. התמיכה מבצעת פעם אחת את חיבור הטלפונים.</p>
+<h2>לפני ששולחים את הקובץ</h2>
+<ol>
+<li>בחרו מחשב Windows 64 ביט שיישאר דלוק ומחובר לרשת. על Windows 10 נדרשת מערכת נתמכת/מעודכנת לפי מדיניות הארגון; מומלץ Windows 11.</li>
+<li>קבעו למחשב כתובת קבועה, בדרך כלל באמצעות הזמנת DHCP בנתב. המתקין אינו משנה את כתובת המחשב.</li>
+<li>בדקו מהי רשת הטלפונים המורשית, למשל <code>192.168.1.0/24</code>, ושהלקוח מאשר הגשת הספר ב־HTTP ברשת זו.</li>
+<li>ודאו שהרשת מוגדרת ב־Windows כפרטית או כרשת ארגונית מאושרת. אין לשנות פרופיל של רשת ציבורית בלי אישור.</li>
+<li>שלחו רק את <strong>NimbusPhonebook-Setup-1.1.0.exe</strong> ואת מדריך הלקוח. אין צורך ב־Git, ב־Go או בקובצי המקור אצל הלקוח.</li>
+</ol>
+<p>המתקין אינו חתום דיגיטלית בשלב זה. אם מדיניות הלקוח חוסמת קובץ לא חתום, יש להסדיר חתימת קוד/אישור ארגוני לפני הפריסה; אין להנחות לקוח לבטל מנגנוני הגנה.</p>
+<h2>ההתקנה — מה הלקוח עושה</h2>
+<ol>
+<li>מפעיל את קובץ ההתקנה ומאשר את בקשת הרשאות המנהל של Windows. אם אין הרשאות, התמיכה/מנהל המחשוב מבצעים את ההתקנה.</li>
+<li>במסך <strong>חיבור לרשת הטלפונים</strong>, מאשר את הרשת שסוכמה עם התמיכה. רשת יחידה מזוהה מוצעת אוטומטית; זיהוי אינו אישור גישה. כשמופיעות כמה רשתות, התמיכה בוחרת את הנכונה.</li>
+<li>ממשיך להתקנה וממתין להודעת הסיום.</li>
+<li>פותח <strong>Nimbus - ספר הטלפונים</strong> משולחן העבודה.</li>
+</ol>
+<p>אם פועל עדיין <code>phonebook.exe run</code> מהניסיון הידני, יש לסגור אותו לפני התקנת השירות, כדי לפנות את הפורטים.</p>
+<h2>מה המתקין מבצע</h2>
+<ul>
+<li>מתקין את התוכנה ואת ההדרכה לתיקייה קבועה תחת Program Files.</li>
+<li>יוצר שירות Windows שעולה אוטומטית, כולל הפעלה מחדש במקרה של כשל.</li>
+<li>מגביל את חומת האש לתת־הרשת שנבחרה, בפורט הטלפונים בלבד, בפרופילים פרטיים/ארגוניים.</li>
+<li>שומר נתונים וגיבויים ב־<code>%ProgramData%\NimbusPhonebook</code> עם הרשאות SYSTEM ומנהלים.</li>
+<li>בודק שהשירות וממשק הניהול זמינים לפני הצגת סיום מוצלח.</li>
+<li>יוצר קיצור דרך לניהול ומתקין מדריך שימוש מקומי. שימוש יומיומי בדפדפן אינו דורש הרשאות מנהל.</li>
+</ul>
+<h2>חיבור הטלפונים — באחריות התמיכה</h2>
+<ol>
+<li>פתחו את הספר דרך הקיצור, הוסיפו איש קשר בדיקה ושמרו.</li>
+<li>פתחו <strong>חיבור הטלפונים</strong> והעתיקו את כתובת ה־XML של הרשת המתאימה.</li>
+<li>ממחשב נוסף ברשת המורשית בדקו שהכתובת מציגה XML. דוגמה: <code>http://192.168.1.100:8088/phonebook.xml</code>.</li>
+<li>בממשק Yealink פתחו <strong>Directory → Remote Phone Book</strong>. הדביקו את הכתובת בשדה <strong>Remote URL</strong>, תנו שם לספר ושמרו.</li>
+<li>פתחו את הספר בטלפון ובדקו שהאיש שנשמר מופיע ושהחיוג תקין.</li>
+</ol>
+<p><strong>אין להזין בטלפון <code>127.0.0.1</code> או את פורט הניהול <code>8765</code>.</strong> כתובת הטלפונים משתמשת ב־IP של המחשב, בפורט <code>8088</code> ובנתיב <code>/phonebook.xml</code>. אם הותאמו פורטים בהתקנה קודמת, השתמשו בכתובת שהאפליקציה מציגה.</p>
+<p>את תזמון הרענון מגדירים בטלפון. בדקו בפועל כמה זמן עובר משמירה ועד עדכון; אין צורך לשנות פורמט XML שכבר עובד.</p>
+<h2>בדיקת מסירה קצרה</h2>
+<ol>
+<li>קיצור הדרך פותח את הממשק ללא חלון פקודות וללא בקשת מנהל.</li>
+<li>איש קשר נשמר, נשאר לאחר רענון ומופיע ב־XML ובטלפון.</li>
+<li>הפעילו מחדש את המחשב ובדקו שהספר חוזר לפעול אוטומטית. בדיקת זמינות לטלפון צריכה להיעשות גם ללא משתמש מחובר.</li>
+<li>ודאו שרק הרשת שאושרה מגיעה לספר ושהניהול אינו נגיש ממחשב אחר.</li>
+<li>מסרו ללקוח את מדריך השימוש והסבירו שהמחשב צריך להישאר פעיל.</li>
+</ol>
+<h2>שדרוג והסרה</h2>
+<ul>
+<li><strong>שדרוג:</strong> מריצים את המתקין החדש על אותה התקנה, באותה רשת מורשית. המתקין שומר על הספר, הגיבויים וההגדרות. אין לשנות את רשת הטלפונים כחלק משדרוג שגרתי.</li>
+<li><strong>הסרה:</strong> דרך הגדרות Windows → יישומים → Nimbus Phonebook → הסר התקנה. הנתונים והגיבויים נשארים ב־ProgramData. המחיקה שלהם, אם נדרשת, היא פעולה נפרדת של התמיכה לאחר גיבוי ואישור.</li>
+<li>אם התקנה קודמת נרשמה עם קובץ הפעלה או תיקיית נתונים אחרת, המתקין יעצור במקום לדרוס אותה. התמיכה צריכה לתכנן את המעבר בנפרד.</li>
+</ul>
+<h2>טיפול בשלוש תקלות נפוצות</h2>
+<ul>
+<li><strong>התקנה נעצרת:</strong> בדקו את ההודעה. תהליך קונסול ישן, רשת שונה מההגדרה הקיימת, קובץ הגדרות פגום או התקנה במיקום אחר דורשים טיפול לפני ניסיון נוסף. במצב שחזור שלא הושלם, אל תמחקו <code>phonebook-previous.exe</code>.</li>
+<li><strong>קיצור הדרך לא נפתח:</strong> בדקו ב־Services ששירות <strong>Nimbus Phonebook</strong> פועל. בדקו לוגים בתיקיית <code>logs</code> ב־ProgramData.</li>
+<li><strong>הספר עובד במחשב ולא בטלפונים:</strong> בדקו IP קבוע, Remote URL מלא, רשת מורשית ופרופיל חומת האש. אל תפתחו את ממשק הניהול לרשת.</li>
+</ul>
+<p>הספר מכיל מידע עסקי/אישי. אל תשלחו את <code>book.json</code>, הגיבויים או הלוגים ללא צורך וערוץ תמיכה מאושר.</p>
+<h2>הפצה אוטומטית לתמיכה בלבד</h2>
+<p>אפשר להריץ מתוך כלי הפצה ארגוני מוגבה: <code>NimbusPhonebook-Setup-1.1.0.exe /S /SUBNET=192.168.1.0/24</code>. יש להחליף את הרשת לזו שאושרה. קוד יציאה 0 מציין סיום מוצלח; כל קוד אחר דורש בדיקה. אין צורך לתת פקודה זו ללקוח.</p><footer>Nimbus Phonebook · גרסה 1.1 · אוקטובר 2026</footer></main></body></html>

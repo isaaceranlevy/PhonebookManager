@@ -102,3 +102,11 @@ func rollbackService(s lifecycle, timeout time.Duration) error {
 	}
 	return nil
 }
+
+// Users may read/execute the program and guides, but only SYSTEM/admins can modify them.
+func installDescriptor(directory bool) string {
+	if directory {
+		return "O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;GRGX;;;BU)"
+	}
+	return "O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;GRGX;;;BU)"
+}

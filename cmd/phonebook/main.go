@@ -16,6 +16,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -46,6 +47,8 @@ func execute(args []string) error {
 	dir := fs.String("data-dir", defaultDir(), "data directory")
 	subnet := fs.String("subnet", "", "allowed IPv4 CIDR for Windows firewall")
 	format := fs.String("format", "", "Yealink fixture format")
+	installDir := fs.String("install-dir", "", "installer target directory")
+	output := fs.String("output", "", "installer metadata file")
 	purge := fs.Bool("purge", false, "remove default ProgramData on uninstall")
 	if e := fs.Parse(args); e != nil {
 		return e
@@ -54,7 +57,7 @@ func execute(args []string) error {
 		return fmt.Errorf("unexpected arguments")
 	}
 	switch command {
-	case "run", "serve-fixture", "install", "uninstall", "status":
+	case "run", "serve-fixture", "install", "uninstall", "status", "setup-info", "setup-check", "setup-prepare", "setup-finish", "setup-remove", "setup-ready", "setup-harden":
 	default:
 		return fmt.Errorf("unknown command %q; use help", command)
 	}
@@ -63,6 +66,9 @@ func execute(args []string) error {
 		return e
 	}
 	*dir = abs
+	if strings.HasPrefix(command, "setup-") {
+		return setupCommand(command, *dir, *installDir, *subnet, *output)
+	}
 	if command == "install" || command == "uninstall" || command == "status" {
 		if runtime.GOOS != "windows" {
 			return fmt.Errorf("%s requires Windows", command)

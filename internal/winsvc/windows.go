@@ -55,7 +55,9 @@ func (h handler) Execute(_ []string, requests <-chan svc.ChangeRequest, status c
 	}
 }
 func RunService(run func(context.Context, func()) error) error { return svc.Run(Name, handler{run}) }
-func SecureDir(dir string) error {
+func SecureDir(dir string) error                               { return secureTree(dir, secureDescriptor) }
+func SecureInstallDir(dir string) error                        { return secureTree(dir, installDescriptor) }
+func secureTree(dir string, descriptor func(bool) string) error {
 	if e := os.MkdirAll(dir, 0700); e != nil {
 		return e
 	}
@@ -66,7 +68,7 @@ func SecureDir(dir string) error {
 		if d.Type()&os.ModeSymlink != 0 {
 			return fmt.Errorf("refusing symlink in service data directory: %s", path)
 		}
-		sddl := secureDescriptor(d.IsDir())
+		sddl := descriptor(d.IsDir())
 		sd, e := windows.SecurityDescriptorFromString(sddl)
 		if e != nil {
 			return e
@@ -235,4 +237,48 @@ func (v serviceLifecycle) DisableRecovery() error {
 		return e
 	}
 	return v.s.ResetRecoveryActions()
+}
+
+func RegistrationArgs() ([]string, bool, error) {
+	m, e := mgr.Connect()
+	if e != nil {
+		return nil, false, e
+	}
+	defer m.Disconnect()
+	s, e := m.OpenService(Name)
+	if errors.Is(e, windows.ERROR_SERVICE_DOES_NOT_EXIST) {
+		return nil, false, nil
+	}
+	if e != nil {
+		return nil, false, e
+	}
+	defer s.Close()
+	c, e := s.Config()
+	if e != nil {
+		return nil, true, e
+	}
+	args, e := windows.DecomposeCommandLine(c.BinaryPathName)
+	return args, true, e
+}
+func StartExisting() error {
+	m, e := mgr.Connect()
+	if e != nil {
+		return e
+	}
+	defer m.Disconnect()
+	s, e := m.OpenService(Name)
+	if e != nil {
+		return e
+	}
+	defer s.Close()
+	v, e := s.Query()
+	if e != nil {
+		return e
+	}
+	if v.State == svc.Stopped {
+		if e = s.Start(); e != nil {
+			return e
+		}
+	}
+	return waitState(s, svc.Running)
 }
