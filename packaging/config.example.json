@@ -1,0 +1,13 @@
+{
+  "adminPort": 8765,
+  "phonePort": 8088,
+  "format": "directory",
+  "allowedSubnet": "192.168.1.0/24",
+  "limits": {
+    "contacts": 1000,
+    "name": 64,
+    "number": 32,
+    "jsonBytes": 1048576,
+    "csvBytes": 2097152
+  }
+}
